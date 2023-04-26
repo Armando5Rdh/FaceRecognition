@@ -63,14 +63,18 @@ class GUI:
                 self.camera_running = False
                 break
 
+            gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            gray_frame = cv2.resize(gray_frame, (640, 480))
+            haarcascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+            faces = haarcascade.detectMultiScale(gray_frame)
+            for (x, y, w, h) in faces:
+                FaceImg = gray_frame[y:y+h,x:x+w]
+                cv2.rectangle(gray_frame,(x,y),(x+w,y+h))
+                cv2.rectangle(gray_frame,(x,y-40),(x+w,y))
             # Resize the frame to a valid size and shape
             if self.evaluateFlag:
                 
                 if frame.shape[0] > 0 and frame.shape[1] > 0:
-                    gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-                    gray_frame = cv2.resize(gray_frame, (640, 480))
-                    haarcascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-                    faces = haarcascade.detectMultiScale(gray_frame)
                     for (x, y, w, h) in faces:
                         FaceImg = gray_frame[y:y+h,x:x+w]
                         cv2.imwrite("grayFace.jpg",FaceImg)
